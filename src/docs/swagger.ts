@@ -117,6 +117,34 @@ export function getSwaggerSpec() {
               tagIds: { type: "array", items: { type: "string", format: "uuid" } },
             },
           },
+          AdminArticleDetailResponse: {
+            type: "object",
+            additionalProperties: false,
+            required: [
+              "id",
+              "title",
+              "summary",
+              "image",
+              "status",
+              "value",
+              "html",
+              "tagIds",
+              "createdAt",
+              "updatedAt",
+            ],
+            properties: {
+              id: { type: "string", format: "uuid" },
+              title: { type: "string" },
+              summary: { type: "string" },
+              image: { type: ["string", "null"] },
+              status: { type: "string", enum: ["draft", "published"] },
+              value: { type: "array", items: {} },
+              html: { type: "string" },
+              tagIds: { type: "array", items: { type: "string", format: "uuid" } },
+              createdAt: { type: "string" },
+              updatedAt: { type: "string" },
+            },
+          },
           TagUpsertRequest: {
             type: "object",
             additionalProperties: false,
@@ -131,4 +159,3 @@ export function getSwaggerSpec() {
     apis: ["src/routes/*.ts"],
   });
 }
-

@@ -19,6 +19,14 @@ const articleInclude = Prisma.validator<Prisma.ArticleInclude>()({
 
 type ArticleWithTags = Prisma.ArticleGetPayload<{ include: typeof articleInclude }>;
 
+const adminArticleInclude = Prisma.validator<Prisma.ArticleInclude>()({
+  tags: { select: { id: true, name: true } },
+});
+
+type AdminArticleWithTags = Prisma.ArticleGetPayload<{
+  include: typeof adminArticleInclude;
+}>;
+
 async function ensureTagsExist(tagIds: string[]) {
   if (tagIds.length === 0) return;
   const tags = await prisma.tag.findMany({ where: { id: { in: tagIds } }, select: { id: true } });
@@ -129,6 +137,32 @@ export async function listPublishedArticles(input: {
 export async function getPublishedArticle(id: string): Promise<ArticleWithTags | null> {
   return prisma.article.findFirst({
     where: { id, status: ArticleStatus.published },
+    include: articleInclude,
+  });
+}
+
+export async function getAdminArticle(id: string): Promise<AdminArticleWithTags> {
+  const article = await prisma.article.findUnique({
+    where: { id },
+    include: adminArticleInclude,
+  });
+  if (!article) throw new HttpError(404, "Not found");
+  return article;
+}
+
+export async function updateArticleStatus(id: string): Promise<ArticleWithTags> {
+  const existing = await prisma.article.findUnique({
+    where: { id },
+    select: { id: true, status: true },
+  });
+  if (!existing) throw new HttpError(404, "Not found");
+
+  const nextStatus =
+    existing.status === ArticleStatus.draft ? ArticleStatus.published : ArticleStatus.draft;
+
+  return prisma.article.update({
+    where: { id },
+    data: { status: nextStatus },
     include: articleInclude,
   });
 }

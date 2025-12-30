@@ -3,10 +3,16 @@ import { HttpError } from "../services/httpError";
 import {
   createArticle,
   deleteArticle,
+  getAdminArticle,
   listAdminArticles,
+  updateArticleStatus,
   updateArticle,
 } from "../services/articleService";
-import { toArticleResponse, toPaginationResponse } from "../services/mappers";
+import {
+  toAdminArticleDetailResponse,
+  toArticleResponse,
+  toPaginationResponse,
+} from "../services/mappers";
 
 export async function adminArticleCreateController(
   req: Request,
@@ -30,6 +36,36 @@ export async function adminArticleUpdateController(
     const id = req.params.id;
     if (!id) throw new HttpError(400, "Invalid id");
     const updated = await updateArticle(id, req.body);
+    res.json(toArticleResponse(updated));
+  } catch (err) {
+    next(err);
+  }
+}
+
+export async function adminArticleGetController(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const id = req.params.id;
+    if (!id) throw new HttpError(400, "Invalid id");
+    const article = await getAdminArticle(id);
+    res.json(toAdminArticleDetailResponse(article));
+  } catch (err) {
+    next(err);
+  }
+}
+
+export async function adminArticleStatusUpdateController(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const id = req.params.id;
+    if (!id) throw new HttpError(400, "Invalid id");
+    const updated = await updateArticleStatus(id);
     res.json(toArticleResponse(updated));
   } catch (err) {
     next(err);
@@ -66,4 +102,3 @@ export async function adminArticleListController(
     next(err);
   }
 }
-

@@ -4,7 +4,7 @@ import { requireAdminAuth } from "../middlewares/requireAdminAuth";
 import { adminLoginSchema } from "../validators/adminAuth";
 import { adminLoginController } from "../controllers/adminAuthController";
 import { adminArticleCreateSchema, adminArticleListSchema, adminArticleUpdateSchema, idParamSchema } from "../validators/articles";
-import { adminArticleCreateController, adminArticleDeleteController, adminArticleListController, adminArticleUpdateController } from "../controllers/adminArticlesController";
+import { adminArticleCreateController, adminArticleDeleteController, adminArticleGetController, adminArticleListController, adminArticleStatusUpdateController, adminArticleUpdateController } from "../controllers/adminArticlesController";
 import { tagCreateSchema, tagUpdateSchema, tagListSchema } from "../validators/tags";
 import { adminTagCreateController, adminTagDeleteController, adminTagListController, adminTagUpdateController } from "../controllers/adminTagsController";
 
@@ -122,6 +122,86 @@ adminRouter.get("/articles", validate(adminArticleListSchema), adminArticleListC
  *               $ref: "#/components/schemas/ErrorResponse"
  */
 adminRouter.post("/articles", validate(adminArticleCreateSchema), adminArticleCreateController);
+
+/**
+ * @openapi
+ * /api/admin/articles/{id}:
+ *   get:
+ *     summary: Get article by id (admin)
+ *     tags: [Admin Articles]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema: { type: string, format: uuid }
+ *     responses:
+ *       200:
+ *         description: Article detail (admin)
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: "#/components/schemas/AdminArticleDetailResponse"
+ *       401:
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: "#/components/schemas/ErrorResponse"
+ *       404:
+ *         description: Not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: "#/components/schemas/ErrorResponse"
+ */
+adminRouter.get("/articles/:id", validate(idParamSchema), adminArticleGetController);
+
+/**
+ * @openapi
+ * /api/admin/articles/{id}/status:
+ *   patch:
+ *     summary: Update article status (admin)
+ *     tags: [Admin Articles]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema: { type: string, format: uuid }
+ *     responses:
+ *       200:
+ *         description: Updated article
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: "#/components/schemas/Article"
+ *       400:
+ *         description: Validation error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: "#/components/schemas/ErrorResponse"
+ *       401:
+ *         description: Unauthorized
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: "#/components/schemas/ErrorResponse"
+ *       404:
+ *         description: Not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: "#/components/schemas/ErrorResponse"
+ */
+adminRouter.patch(
+  "/articles/:id/status",
+  validate(idParamSchema),
+  adminArticleStatusUpdateController,
+);
 
 /**
  * @openapi

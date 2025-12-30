@@ -53,4 +53,3 @@ export const publicArticleGetSchema = z.object({
   params: z.object({ id: z.string().uuid() }),
   query: z.object({}).passthrough(),
 });
-
