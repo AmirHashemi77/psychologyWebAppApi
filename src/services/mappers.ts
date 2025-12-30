@@ -10,6 +10,7 @@ export type ArticleResponse = {
   id: string;
   title: string;
   summary: string;
+  author: string;
   image: string | null;
   status: ArticleResponseStatus;
   tags: string[];
@@ -23,6 +24,7 @@ export type AdminArticleDetailResponse = {
   id: string;
   title: string;
   summary: string;
+  author: string;
   image: string | null;
   status: ArticleResponseStatus;
   value: unknown[];
@@ -51,6 +53,7 @@ export function toArticleResponse(article: ArticleWithTags): ArticleResponse {
     id: article.id,
     title: article.title,
     summary: article.summary,
+    author: "مرضیه خمسه",
     image: article.image ?? null,
     status: article.status as ArticleResponseStatus,
     tags: article.tags.map((t) => t.name),
@@ -68,6 +71,7 @@ export function toAdminArticleDetailResponse(
     id: article.id,
     title: article.title,
     summary: article.summary,
+    author: "مرضیه خمسه",
     image: article.image ?? null,
     status: article.status as ArticleResponseStatus,
     value: (article.value as unknown[]) ?? [],
