@@ -3,7 +3,10 @@ import { prisma } from "./prisma";
 import { HttpError } from "./httpError";
 
 export async function listTags() {
-  return prisma.tag.findMany({ orderBy: { createdAt: "desc" } });
+  return prisma.tag.findMany({
+    orderBy: { createdAt: "desc" },
+    include: { _count: { select: { articles: true } } },
+  });
 }
 
 export async function createTag(input: { name: string }) {
@@ -41,4 +44,3 @@ export async function deleteTag(id: string) {
     throw err;
   }
 }
-

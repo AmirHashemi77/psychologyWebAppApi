@@ -1,6 +1,6 @@
 import type { Request, Response, NextFunction } from "express";
 import { createTag, deleteTag, listTags, updateTag } from "../services/tagService";
-import { toTagResponse } from "../services/mappers";
+import { toAdminTagResponse, toTagResponse } from "../services/mappers";
 import { HttpError } from "../services/httpError";
 
 export async function adminTagListController(
@@ -10,7 +10,7 @@ export async function adminTagListController(
 ) {
   try {
     const tags = await listTags();
-    res.json(tags.map(toTagResponse));
+    res.json(tags.map(toAdminTagResponse));
   } catch (err) {
     next(err);
   }

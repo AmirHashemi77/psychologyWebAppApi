@@ -61,6 +61,17 @@ export function getSwaggerSpec() {
               createdAt: { type: "string" },
             },
           },
+          AdminTag: {
+            type: "object",
+            additionalProperties: false,
+            required: ["id", "name", "createdAt", "usageCount"],
+            properties: {
+              id: { type: "string", format: "uuid" },
+              name: { type: "string" },
+              createdAt: { type: "string" },
+              usageCount: { type: "number", description: "Number of articles using this tag" },
+            },
+          },
           PaginationResponse: {
             type: "object",
             additionalProperties: false,

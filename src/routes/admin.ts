@@ -297,7 +297,7 @@ adminRouter.delete("/articles/:id", validate(idParamSchema), adminArticleDeleteC
  *             schema:
  *               type: array
  *               items:
- *                 $ref: "#/components/schemas/Tag"
+ *                 $ref: "#/components/schemas/AdminTag"
  *       401:
  *         description: Unauthorized
  *         content:

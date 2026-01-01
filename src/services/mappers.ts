@@ -3,6 +3,7 @@ import type { Paginated } from "./pagination";
 
 type ArticleWithTags = Article & { tags: { name: string }[] };
 type AdminArticleWithTags = Article & { tags: { id: string; name: string }[] };
+type TagWithUsageCount = Tag & { _count: { articles: number } };
 
 export type ArticleResponseStatus = "draft" | "published";
 
@@ -45,6 +46,17 @@ export function toTagResponse(tag: Tag): TagResponse {
     id: tag.id,
     name: tag.name,
     createdAt: tag.createdAt.toISOString(),
+  };
+}
+
+export type AdminTagResponse = TagResponse & {
+  usageCount: number;
+};
+
+export function toAdminTagResponse(tag: TagWithUsageCount): AdminTagResponse {
+  return {
+    ...toTagResponse(tag),
+    usageCount: tag._count.articles,
   };
 }
 
